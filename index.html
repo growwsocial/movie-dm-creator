@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Message Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #1c1c1c;
+            color: #fff;
+        }
+        .container {
+            max-width: 600px;
+            margin: 30px auto;
+            padding: 20px;
+            background: #2c2c2c;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #ffa500;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        input, select, button {
+            width: 100%;
+            margin-top: 8px;
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+        }
+        button {
+            background: #ffa500;
+            color: #000;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover {
+            background: #e69500;
+        }
+        .duration-picker {
+            display: flex;
+            gap: 10px;
+        }
+        .duration-picker select {
+            flex: 1;
+        }
+        .quality-box {
+            margin-top: 10px;
+            padding: 10px;
+            background: #333;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .quality-box input,
+        .quality-box select {
+            width: 48%;
+        }
+        .output {
+            margin-top: 20px;
+            padding: 15px;
+            background: #333;
+            border-radius: 4px;
+            white-space: pre-wrap;
+        }
+        .output a {
+            color: #00bfff;
+        }
+        #copyButton {
+            margin-top: 10px;
+            display: none;
+            background: #00bfff;
+            color: #000;
+            font-weight: bold;
+        }
+        #copyButton:hover {
+            background: #0099cc;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Movie Message Generator</h1>
+        <label for="movieName">Movie Name</label>
+        <input type="text" id="movieName" placeholder="Enter movie name">
+        
+        <label for="genre">Genre</label>
+        <select id="genre" multiple>
+            <option value="Comedy">Comedy</option>
+            <option value="Romance">Romance</option>
+            <option value="Action">Action</option>
+            <option value="Horror">Horror</option>
+            <option value="Drama">Drama</option>
+            <option value="Thriller">Thriller</option>
+            <option value="Sci-Fi">Sci-Fi</option>
+            <option value="Fantasy">Fantasy</option>
+            <option value="Documentary">Documentary</option>
+            <option value="Animation">Animation</option>
+        </select>
+        
+        <label for="duration">Duration</label>
+        <div>
+            <input type="number" id="hours" min="0" placeholder="Hours" style="width: 13.5%; display: inline-block;">
+            <input type="number" id="minutes" min="0" max="59" placeholder="Minutes" style="width: 17.7%; display: inline-block;">
+            <input type="number" id="seconds" min="0" max="59" placeholder="Seconds" style="width: 16.5%; display: inline-block;">
+        </div>
+        
+        <div id="qualitySection">
+            <label for="quality">Quality and Links</label>
+            <div class="quality-box">
+                <select class="qualitySelect" onchange="updateQualityOptions()">
+                    <option value="">Select Quality</option>
+                    <option value="480p">480p</option>
+                    <option value="720p">720p</option>
+                    <option value="1080p">1080p</option>
+                    <option value="1440p">1440p</option>
+                    <option value="2160p">2160p (4K)</option>
+                    <option value="4320p">4320p (8K)</option>
+                </select>
+                <div style="display: flex; gap: 10px;">
+                    <input type="number" placeholder="Enter file size" class="fileSize" />
+                    <select class="sizeUnit">
+                        <option value="GB">GB</option>
+                        <option value="MB">MB</option>
+                    </select>
+                </div>
+                <input type="text" placeholder="Enter link for selected quality" class="qualityLink">
+            </div>
+        </div>
+        
+        <button onclick="addQuality()">Add More Quality</button>
+        <button onclick="generateMessage()">Generate Message</button>
+        
+        <div class="output" id="output"></div>
+        <button id="copyButton" onclick="copyMessage()">Copy to Clipboard</button>
+    </div>
+
+    <script>
+        function generateMessage() {
+            const movieName = document.getElementById("movieName").value.trim();
+            const genreSelect = document.getElementById("genre");
+            const selectedGenres = Array.from(genreSelect.selectedOptions).map(option => option.value);
+            
+            if (!movieName || selectedGenres.length === 0) {
+                alert("Please fill in all fields!");
+                return;
+            }
+
+            const genre = selectedGenres.join(", "); // Combine selected genres
+
+            const hours = parseInt(document.getElementById("hours").value || 0);
+            const minutes = parseInt(document.getElementById("minutes").value || 0);
+            const seconds = parseInt(document.getElementById("seconds").value || 0);
+
+            // Generate duration string
+            const durationParts = [];
+            if (hours > 0) durationParts.push(`${hours}h`);
+            if (minutes > 0) durationParts.push(`${minutes}m`);
+            if (seconds > 0) durationParts.push(`${seconds}s`);
+            const duration = durationParts.join(" ") || "0s";
+
+            const qualityBoxes = document.querySelectorAll(".quality-box");
+            const qualityLinks = [];
+
+            qualityBoxes.forEach(box => {
+                const quality = box.querySelector(".qualitySelect").value;
+                const fileSize = box.querySelector(".fileSize").value.trim();
+                const sizeUnit = box.querySelector(".sizeUnit").value;
+                const link = box.querySelector(".qualityLink").value.trim();
+
+                if (link && fileSize) {
+                    qualityLinks.push(`*${quality}* - {${fileSize} ${sizeUnit}} - ${link}`);
+                }
+            });
+
+            if (qualityLinks.length === 0) {
+                alert("Please add at least one quality with a file size and link!");
+                return;
+            }
+
+            const message = `
+*🎬 ${movieName}*
+
+*🔰Genre:- ${genre}*
+
+*⏰Duration:- ${duration}*
+
+*⬇️ Downloading Links*
+
+${qualityLinks.join("\n\n")}
+
+*Quick Movies😃*
+*⚡Easy & fast⚡*
+`;
+
+            document.getElementById("output").innerText = message.trim();
+
+            const copyButton = document.getElementById("copyButton");
+            if (message.trim()) {
+                copyButton.style.display = "block";
+            }
+        }
+
+        function addQuality() {
+            const qualitySection = document.getElementById("qualitySection");
+            const newQualityBox = document.createElement("div");
+            newQualityBox.classList.add("quality-box");
+            newQualityBox.innerHTML = `
+                <select class="qualitySelect" onchange="updateQualityOptions()">
+                    <option value="">Select Quality</option>
+                    <option value="480p">480p</option>
+                    <option value="720p">720p</option>
+                    <option value="1080p">1080p</option>
+                    <option value="1440p">1440p</option>
+                    <option value="2160p">2160p (4K)</option>
+                    <option value="4320p">4320p (8K)</option>
+                </select>
+                <div style="display: flex; gap: 10px;">
+                    <input type="number" placeholder="Enter file size" class="fileSize" />
+                    <select class="sizeUnit">
+                        <option value="GB">GB</option>
+                        <option value="MB">MB</option>
+                    </select>
+                </div>
+                <input type="text" placeholder="Enter link for selected quality" class="qualityLink">
+            `;
+            qualitySection.appendChild(newQualityBox);
+        }
+
+        function copyMessage() {
+            const output = document.getElementById("output");
+            const message = output.innerText;
+            if (!message) {
+                alert("No message to copy!");
+                return;
+            }
+
+            navigator.clipboard.writeText(message)
+                .then(() => alert("Message copied to clipboard!"))
+                .catch(() => alert("Failed to copy message!"));
+        }
+    </script>
+</body>
+</html>
