@@ -1,0 +1,125 @@
+       body {
+    font-family: -apple-system, BlinkMacSystemFont, "San Francisco", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to bottom, #1a1a1a, #2b2b2b); /* Lite black gradient */
+    color: #eaeaea; /* Light text for contrast */
+}
+
+.container {
+    max-width: 600px;
+    margin: 30px auto;
+    padding: 20px;
+    background: #2f2f2f; /* Lite black container */
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #ffa500; /* Warm accent color for headings */
+    font-size: 22px;
+    font-weight: 600;
+}
+
+label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+    color: #eaeaea;
+}
+
+input, select, button {
+    width: 100%;
+    margin-top: 8px;
+    padding: 12px;
+    font-size: 16px;
+    border: 1px solid #444; /* Dark border */
+    border-radius: 12px;
+    background: #3a3a3a; /* Lite black input fields */
+    color: #fff; /* Light text */
+    transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+input:focus, select:focus, button:focus {
+    border-color: #ffa500; /* Accent border color on focus */
+    box-shadow: 0 0 0 3px rgba(255, 165, 0, 0.3); /* Soft orange glow */
+    outline: none;
+}
+
+button {
+    background: linear-gradient(to right, #444, #666); /* Gradient for buttons */
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+}
+
+button:hover {
+    background: linear-gradient(to right, #666, #888); /* Hover effect */
+}
+
+button:active {
+    background: linear-gradient(to right, #888, #aaa); /* Active effect */
+}
+
+.duration-picker {
+    display: flex;
+    gap: 10px;
+}
+
+.duration-picker select {
+    flex: 1;
+}
+
+.quality-box {
+    margin-top: 10px;
+    padding: 10px;
+    background: #3a3a3a; /* Lite black container for quality inputs */
+    border-radius: 12px;
+    border: 1px solid #444;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.quality-box input,
+.quality-box select {
+    width: 48%;
+}
+
+.output {
+    margin-top: 20px;
+    padding: 15px;
+    background: #3a3a3a; /* Lite black output box */
+    border-radius: 12px;
+    border: 1px solid #444;
+    white-space: pre-wrap;
+    font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+    font-size: 14px;
+    line-height: 1.4;
+    color: #eaeaea;
+}
+
+.output a {
+    color: #ffa500; /* Accent color for links */
+    text-decoration: none;
+}
+
+#copyButton {
+    margin-top: 10px;
+    display: none;
+    background: linear-gradient(to right, #444, #666); /* Button matches lite black theme */
+    color: #fff;
+    font-weight: bold;
+    border: none;
+}
+
+#copyButton:hover {
+    background: linear-gradient(to right, #666, #888);
+}
+
+#copyButton:active {
+    background: linear-gradient(to right, #888, #aaa);
+}
